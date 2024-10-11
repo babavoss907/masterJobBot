@@ -1,0 +1,12 @@
+# Ignore environment variables and credentials
+resources/.env
+
+# Ignore virtual environment folder (if you created one)
+venv/
+
+# Ignore log files
+logs/application_log.txt
+
+# Ignore system files
+*.pyc
+__pycache__/
