@@ -1,0 +1,35 @@
+Samuel Clark's Resume Information:
+
+Name: Samuel Clark
+Title: Software Developer
+Location: Miami, Florida, United States
+
+Summary:
+Samuel Clark is a highly skilled Software Developer with experience in full-stack development. He has a strong background in building scalable backend systems, working with cloud technologies, and implementing APIs. Samuel is proficient in Python, Flask, AWS, and microservices architecture.
+
+Work Experience:
+1. Software Developer at ZeOmega (October 2021 - October 2023)
+   - Developed microservices for the Jiva health platform using Python and Flask.
+   - Optimized database interactions, enhancing system efficiency by 25%.
+   - Implemented new features and improved performance across various systems.
+
+2. Teaching Assistant/Software Developer at Code Fellows (July 2021 - October 2021)
+   - Provided mentorship and assistance to students learning software development.
+   - Helped students troubleshoot and improve their code in real-time.
+
+3. Full Stack Software Engineer at Online Business Development (October 2017 - July 2021)
+   - Developed high-conversion eCommerce platforms.
+   - Created comprehensive backend solutions for client projects.
+
+Skills:
+- Python, Flask, SQL, Docker
+- AWS services (DynamoDB, Lambda, Amplify)
+- API Design and Microservices Architecture
+- DevOps practices and CI/CD frameworks
+
+Education:
+- Some college
+
+Looking for:
+- Backend Software Engineering roles
+- Opportunities involving API design, AWS services, and scalable backend systems

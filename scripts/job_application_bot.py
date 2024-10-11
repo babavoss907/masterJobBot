@@ -17,7 +17,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
-from ai.ai_bot import generate_cover_letter, generate_answer_with_gpt
+from ai.ai_bot import generate_cover_letter, generate_answer_for_question
 
 # # Load environment variables from .env file (LinkedIn credentials)
 load_dotenv("resources/.env")
@@ -126,6 +126,9 @@ def apply_to_jobs(driver, config):
 
                 # Now check the side panel for the Easy Apply button
                 try:
+                    # scrape job details for ai
+                    job_description = scrape_job_description(driver)
+
                     easy_apply_button = WebDriverWait(driver, 5).until(
                         EC.element_to_be_clickable((By.CLASS_NAME, "jobs-apply-button"))
                     )
@@ -208,9 +211,6 @@ def fill_application_form(driver, answers):
                         )
                     )
                     try:
-                        # import pdb
-
-                        # pdb.set_trace()
                         review_button.click()
                         print("Clicked on 'Review' button.")
                     except ElementClickInterceptedException:
@@ -317,11 +317,22 @@ def fill_form_fields(driver, config):
 
                 # Match the question with the config
                 answer_found = False
+                answer = None
                 for key, qa_pair in config.items():
                     if qa_pair["question"].lower() == question_text.lower():
                         answer = qa_pair["answer"]
                         answer_found = True
                         break
+
+                if not answer_found:
+                    input("Answer not found generating...")
+                    import pdb
+
+                    pdb.set_trace()
+                    answer = generate_answer_for_question(question_text)
+                    if answer:
+                        input_element.send_keys(answer)
+                        print(f"AI-generated answer for: {question_text}")
 
                 if answer_found:
                     # Handle <select> dropdowns
@@ -377,9 +388,6 @@ def fill_form_fields(driver, config):
                             f"Unhandled field type: {input_element.tag_name} for question: {question_text}"
                         )
 
-                else:
-                    print(f"Unanswered question found: {question_text} (logged)")
-
             except Exception as e:
                 if question_text:
                     print(f"Error filling field '{question_text}': {e}")
@@ -415,6 +423,9 @@ def close_popup_if_present(driver):
 def handle_follow_checkbox(driver):
     try:
         # Locate the 'Follow' checkbox using its ID
+        import pdb
+
+        pdb.set_trace()
         follow_checkbox = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "follow-company-checkbox"))
         )
@@ -440,18 +451,19 @@ def handle_follow_checkbox(driver):
 
 
 # Example function to scrape job description using Selenium
-def scrape_job_description(driver, job_url):
-    driver.get(job_url)
-
+def scrape_job_description(driver):
     try:
+        # Wait until the job description is present and visible
         job_description_element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "job-description"))
+            EC.presence_of_element_located((By.ID, "job-details"))
         )
-        job_description = job_description_element.text
+        job_description = job_description_element.text.strip()
+        print(f"Job Description: {job_description}")
         return job_description
+
     except Exception as e:
-        print(f"Error while scraping job description: {e}")
-        return ""
+        print(f"Error scraping job description: {e}")
+        return None
 
 
 # if __name__ == "__main__":

@@ -1,10 +1,9 @@
 import os
-import time
-import yaml
-import logging
 
 from dotenv import load_dotenv
-from .scripts.job_application_bot import (
+
+# scripts / job_application_bot.py
+from scripts.job_application_bot import (
     load_config,
     linkedin_login,
     apply_to_jobs,
