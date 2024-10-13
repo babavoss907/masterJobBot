@@ -29,7 +29,3 @@ Skills:
 
 Education:
 - Some college
-
-Looking for:
-- Backend Software Engineering roles
-- Opportunities involving API design, AWS services, and scalable backend systems

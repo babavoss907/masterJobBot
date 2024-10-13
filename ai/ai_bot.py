@@ -43,7 +43,8 @@ def generate_cover_letter(job_description):
 # Function to generate an answer for a question based on resume using GPT-3.5
 def generate_answer_for_question(question):
     prompt = f"""
-    Based on the following resume information, provide a detailed answer for the question below if no answer provided make a best guess. If the question is asking for a number of years for a specific technoloy that isnt provided randomize between 2 and 3.:
+    Based on the following resume information, provide a concise and direct answer to the question below. If the question is asking for years of experience and it's not provided in the resume, return a random number between 2 and 3. The response should not include any explanations or estimates—just the answer.
+
     
     Resume Information:
     {resume_info}
@@ -54,7 +55,7 @@ def generate_answer_for_question(question):
     Answer:
     """
 
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {
@@ -64,5 +65,5 @@ def generate_answer_for_question(question):
             {"role": "user", "content": prompt},
         ],
     )
-
-    return response["choices"][0]["message"]["content"]
+    response_message = response.choices[0].message.content
+    return response_message

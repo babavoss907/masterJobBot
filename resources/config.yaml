@@ -1,141 +1,32 @@
-# Search parameters for LinkedIn job search
-search_parameters:
-  job_title: "Backend Developer"
-  location: "Remote"
-  job_type: "Full-time" # Optional, can be "Full-time", "Part-time", etc.
-  experience_level: "Mid-Senior level" # Optional
-  easy_apply: true # Only apply to Easy Apply jobs
-
-# Application form answers for LinkedIn
-application_answers:
-  first_name:
-    question: "first name"
-    answer: "Sam"
-
-  last_name:
-    question: "last name"
-    answer: "Clark"
-
-  email_address:
-    question: "Email address"
-    answer: "samuelclark907@gmail.com"
-
-  country_code:
-    question: "Phone country code"
-    answer: "United States (+1)"
-
-  phone_number:
-    question: "Mobile phone number"
-    answer: "2069105322"
-
-  citizenship:
-    question: "Are you a US citizen?"
-    answer: "Yes"
-
-  sponsorship:
-    question: "Do you require sponsorship?"
-    answer: "No"
-
-  agree_to_terms:
-    question: "Agree to terms"
-    answer: true # True for checked, False for unchecked
-
-  disability:
-    question: "Do you have a disability?"
-    answer: "No"
-
-  java_experience:
-    question: "How many years of work experience do you have with Java?"
-    answer: "2"
-
-  react_experience:
-    question: "How many years of work experience do you have with React.js?"
-    answer: "2"
-
-  understand_contract_role:
-    question: "Confirm that you understand this is a Contract position and not a staff permanent role?"
-    answer: "Yes"
-
-  aws_experience:
-    question: "How many years of work experience do you have with Amazon Web Services (AWS)?"
-    answer: "5"
-
-  shopify_experience:
-    question: "How many years of work experience do you have with Shopify?"
-    answer: "3"
-
-  hydrogen_experience:
-    question: "How many years of work experience do you have with Hydrogen?"
-    answer: "1" # Or whatever the appropriate answer is
-
-  django_experience:
-    question: "How many years of work experience do you have with Django?"
-    answer: "3" # Or whatever the appropriate answer is
-
-  python_experience:
-    question: "How many years of work experience do you have with Python (Programming Language)?"
-    answer: "5" # Or whatever the appropriate answer is
-
-  IaC_experience:
-    question: "How many years of work experience do you have with Infrastructure as code (IaC)?"
-    answer: "3" # Or whatever the appropriate answer is
-
-  devops_experience:
-    question: "How many years of work experience do you have with DevOps?"
-    answer: "3" # Or whatever the appropriate answer is
-
-  linkedin_profile:
-    question: "LinkedIn Profile"
-    answer: "https://www.linkedin.com/in/samuelclark/"
-
-  website:
-    question: "Website"
-    answer: "https://samuelclark.dev"
-
-  acknowledge_privacy_policy:
-    question: "By clicking 'I acknowledge,' you agree to our Privacy Policy and data processing. Providing accurate information is essential, as any dishonesty may lead to rejection of an application or termination."
-    answer: "I acknowledge"
-
-  education_level:
-    question: "Have you completed the following level of education: Master's Degree?"
-    answer: "No" # Change to "No" if applicable
-
-  background_check:
-    question: "Are you willing to undergo a background check, in accordance with local law/regulations?"
-    answer: "Yes" # Change to "No" if applicable
-
-  commuting:
-    question: "Are you comfortable commuting to this job's location?"
-    answer: "Yes" # Change to "No" if applicable
-
-  onsite_setting:
-    question: "Are you comfortable working in an onsite setting?"
-    answer: "Yes" # Change to "No" if applicable
-
-  containerization_experience:
-    question: "How many years of work experience do you have with Containerization?"
-    answer: "3"
-
-  orchestration_experience:
-    question: "How many years of work experience do you have with Orchestration?"
-    answer: "3"
-
-  cicd_frameworks_experience:
-    question: "How many years of work experience do you have with CI/CD frameworks?"
-    answer: "3"
-
-  citizenship:
-  question: "Our position is funded by a U.S. National Science Foundation (NSF) grant, which requires specific citizenship criteria. Are you a U.S. citizen or permanent resident?"
-  answer: "Yes"
-
-  full_stack_experience:
-    question: "Do you have at least of 5 years of professional experience in full-stack development?"
-    answer: "Yes"
-
-  coding_project_video:
-  question: "Did you submit a 5-10 min video of your proudest coding project to Dropbox, named as FirstnameLastnameMobile.mp4?"
-  answer: "No"
-
-  # Other settings
-  settings:
-    max_applications: 2 # Max number of applications per session
+Agree to terms: true
+Are you a US citizen?: "Yes"
+Are you comfortable commuting to this job's location?: "Yes"
+Are you comfortable working in an onsite setting?: "Yes"
+Are you willing to undergo a background check, in accordance with local law/regulations?: "Yes"
+By clicking 'I acknowledge,' you agree to our Privacy Policy and data processing.:
+  I
+  acknowledge
+Confirm that you understand this is a Contract position and not a staff permanent role?: "Yes"
+Did you submit a 5-10 min video of your proudest coding project to Dropbox, named as FirstnameLastnameMobile.mp4?: "No"
+Do you have a disability?: "No"
+Do you have at least 5 years of professional experience in full-stack development?: "Yes"
+Do you require sponsorship?: "No"
+"Have you completed the following level of education: Master's Degree?": "No"
+How many years of work experience do you have with Amazon Web Services (AWS)?: "5"
+How many years of work experience do you have with CI/CD frameworks?: "3"
+How many years of work experience do you have with Containerization?: "3"
+How many years of work experience do you have with DevOps?: "3"
+How many years of work experience do you have with Django?: "3"
+How many years of work experience do you have with Hydrogen?: "1"
+How many years of work experience do you have with Infrastructure as code (IaC)?: "3"
+How many years of work experience do you have with Java?: "2"
+How many years of work experience do you have with Orchestration?: "3"
+How many years of work experience do you have with Python (Programming Language)?: "5"
+How many years of work experience do you have with React.js?: "2"
+How many years of work experience do you have with Shopify?: "3"
+LinkedIn Profile: https://www.linkedin.com/in/samuelclark/
+? Our position is funded by a U.S. National Science Foundation (NSF) grant, which
+  requires specific citizenship criteria. Are you a U.S. citizen or permanent resident?
+: "Yes"
+Phone country code: United States (+1)
+Website: NA
