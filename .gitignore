@@ -6,6 +6,7 @@ venv/
 
 # Ignore log files
 logs/application_log.txt
+unanswered_questions.log
 
 # Ignore system files
 *.pyc
