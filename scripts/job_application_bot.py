@@ -15,7 +15,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import ElementClickInterceptedException
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    TimeoutException,
+    StaleElementReferenceException,
+)
 
 from ai.ai_bot import generate_cover_letter, generate_answer_for_question
 
@@ -23,6 +27,8 @@ from ai.ai_bot import generate_cover_letter, generate_answer_for_question
 load_dotenv("resources/.env")
 LINKEDIN_USERNAME = os.getenv("LINKEDIN_USERNAME")
 LINKEDIN_PASSWORD = os.getenv("LINKEDIN_PASSWORD")
+
+config_path = "resources/config.yaml"
 
 
 def setup_driver():
@@ -105,64 +111,68 @@ def load_config():
 
 def apply_to_jobs(driver, config):
     try:
-        # Scroll to load more job listings
-        print("Scrolling down to load job listings...")
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(2)
+        while True:
+            # Scroll to load more job listings
+            print("Scrolling down to load job listings...")
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(2)
 
-        # Find all job cards in the list
-        # jobs = driver.find_elements(By.CLASS_NAME, "job-card-container__link")
-        # jobs = driver.find_elements(By.CSS_SELECTOR, ".job-card-container--clickable")
-        jobs = get_all_job_cards(driver)
-        easy_apply_jobs = []
+            # Find all job cards in the list
+            # jobs = driver.find_elements(By.CLASS_NAME, "job-card-container__link")
+            # jobs = driver.find_elements(By.CSS_SELECTOR, ".job-card-container--clickable")
+            jobs = get_all_job_cards(driver)
+            # easy_apply_jobs = []
 
-        import pdb
-
-        pdb.set_trace()
-
-        # Loop through job listings and click each one to open the side panel
-        for index, job in enumerate(jobs):
-            # input("Clicking next job card")
-            try:
-                # Scroll the job card into view and click it
-                print(f"Clicking job card {index+1}")
-                driver.execute_script("arguments[0].scrollIntoView(true);", job)
-                WebDriverWait(driver, 3).until(EC.element_to_be_clickable(job)).click()
-                time.sleep(2)  # Wait for the side panel to load
-
-                # Now check the side panel for the Easy Apply button
+            # Loop through job listings and click each one to open the side panel
+            for index, job in enumerate(jobs):
+                # input("Clicking next job card")
                 try:
-                    # scrape job details for ai
-                    job_description = scrape_job_description(driver)
+                    # Scroll the job card into view and click it
+                    print(f"Clicking job card {index+1}")
+                    driver.execute_script("arguments[0].scrollIntoView(true);", job)
+                    WebDriverWait(driver, 3).until(
+                        EC.element_to_be_clickable(job)
+                    ).click()
+                    time.sleep(2)  # Wait for the side panel to load
 
-                    easy_apply_button = WebDriverWait(driver, 5).until(
-                        EC.element_to_be_clickable((By.CLASS_NAME, "jobs-apply-button"))
-                    )
-                    driver.execute_script("arguments[0].click();", easy_apply_button)
-                    print("Easy Apply button clicked!")
+                    # Now check the side panel for the Easy Apply button
+                    try:
+                        # scrape job details for ai
+                        job_description = scrape_job_description(driver)
 
-                    # time.sleep(3)
+                        easy_apply_button = WebDriverWait(driver, 5).until(
+                            EC.element_to_be_clickable(
+                                (By.CLASS_NAME, "jobs-apply-button")
+                            )
+                        )
+                        driver.execute_script(
+                            "arguments[0].click();", easy_apply_button
+                        )
+                        print("Easy Apply button clicked!")
 
-                    # After clicking, fill out the application form
-                    fill_application_form(driver, config)
+                        # time.sleep(3)
 
-                except Exception:
-                    print(
-                        f"No Easy Apply button found for job {index+1}. Skipping to next job."
-                    )
-                    continue  # If no Easy Apply button is found, skip to the next job
+                        # After clicking, fill out the application form
+                        fill_application_form(driver, config)
 
-            except Exception as e:
-                print(f"Error clicking job card {index+1}: {e}")
-                continue
+                    except Exception:
+                        print(
+                            f"No Easy Apply button found for job {index+1}. Skipping to next job."
+                        )
+                        continue  # If no Easy Apply button is found, skip to the next job
 
-        # click to next page
-        click_next_page(driver)
+                except Exception as e:
+                    print(f"Error clicking job card {index+1}: {e}")
+                    continue
 
-        # Apply to Easy Apply jobs
-        if not easy_apply_jobs:
-            print("No Easy Apply jobs found.")
-            return
+            # click to next page
+            if not click_next_page(driver):
+                break
+
+            # Apply to Easy Apply jobs
+            # if not easy_apply_jobs:
+            #     print("No Easy Apply jobs found.")
+            #     return
 
     except Exception as e:
         print(f"Error while processing jobs: {e}")
@@ -219,6 +229,10 @@ def fill_application_form(driver, answers):
                             )
                         )
                     )
+                    # Scroll the element into view first
+                    driver.execute_script(
+                        "arguments[0].scrollIntoView(true);", review_button
+                    )
                     try:
                         review_button.click()
                         print("Clicked on 'Review' button.")
@@ -230,11 +244,11 @@ def fill_application_form(driver, answers):
                     # Wait a moment for the review page to process
                     time.sleep(2)
 
-                    handle_follow_checkbox(driver)
                     # input("check follow check box")
 
                     # Look for the "Submit" button after review
                     try:
+                        handle_follow_checkbox(driver)
                         submit_button = WebDriverWait(driver, 15).until(
                             EC.element_to_be_clickable(
                                 (
@@ -268,195 +282,268 @@ def fill_application_form(driver, answers):
 
 
 def fill_form_fields(driver, config):
+    new_answers = {}
+
+    def get_label_question_text(label):
+        """Extract question text from a label or fieldset, and clean it."""
+        try:
+            # First, try to directly extract the label text
+            label_text = label.text.strip()
+            if label_text:
+                return label_text
+
+            # If label text is empty, check for other elements that might hold the question text
+            span_element = label.find_element(By.XPATH, ".//span")
+            if span_element:
+                return span_element.text.strip()
+
+            # Check for fieldset and legend, but don't assume it's always there
+            fieldset = label.find_element(By.XPATH, "./ancestor::fieldset")
+            if fieldset:
+                legend = fieldset.find_element(By.XPATH, ".//legend/span")
+                return legend.text.strip() if legend else ""
+
+            # Fallback to the label text if nothing else is found
+            return label.text.strip()
+
+        except Exception as e:
+            print(f"Error extracting question text from label: {e}")
+            return label.text.strip() if label.text else ""
+
+    def handle_resume_prefilled():
+        """Skip resume selection if it's already prefilled."""
+        try:
+            # Locate the resume section by checking for the title "Resume"
+            resume_section = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//h3[text()='Resume']"))
+            )
+
+            # Locate the selected resume container by checking for the selected resume
+            selected_resume = resume_section.find_element(
+                By.XPATH,
+                "//div[contains(@class, 'jobs-document-upload-redesign-card__container--selected')]",
+            )
+            if selected_resume:
+                resume_name = selected_resume.find_element(
+                    By.XPATH, ".//h3"
+                ).text.strip()
+                print(
+                    f"Resume '{resume_name}' is already selected. Skipping resume selection."
+                )
+                return True  # Indicate that the resume is already filled
+            else:
+                print("No preselected resume found. Handling upload if needed.")
+                return False  # Indicate that the resume is not prefilled
+
+        except Exception as e:
+            print(f"Error checking resume selection: {e}")
+            return False  # Indicate that the resume is not prefilled
+
+    def get_question_text_from_fieldset(fieldset):
+        """Extract question text from the legend inside a fieldset."""
+        try:
+            # Find the legend element inside the fieldset
+            legend = fieldset.find_element(By.TAG_NAME, "legend")
+            # Extract the text inside the legend
+            question_text = legend.text.strip()
+            return question_text
+        except Exception as e:
+            print(f"Error extracting question text from fieldset: {e}")
+            return ""
+
+    def handle_radio_buttons(fieldset, question_text, config):
+        """Handle radio button inputs inside a fieldset."""
+        try:
+            question_text = get_question_text_from_fieldset(fieldset)
+            if not question_text:
+                return
+
+            radio_buttons = fieldset.find_elements(By.XPATH, ".//input[@type='radio']")
+            answer = config.get(question_text)
+
+            if not answer:
+                answer = input(
+                    f"Please provide an answer for '{question_text}' (Yes/No): "
+                )
+                new_answers[question_text] = answer
+
+            for radio_button in radio_buttons:
+                label = radio_button.find_element(
+                    By.XPATH, "./following-sibling::label"
+                ).text.strip()
+                if label.lower() == answer.lower():
+                    try:
+                        radio_button.click()
+                        print(f"Selected '{label}' for: {question_text}")
+                        break
+                    except Exception as e:
+                        print(
+                            f"Error selecting '{label}' for question '{question_text}': {e}"
+                        )
+        except Exception as e:
+            print(f"Error handling radio buttons for question '{question_text}': {e}")
+
+    def handle_select_dropdown(input_element, question_text, config):
+        """Handle select dropdown inputs."""
+        select = Select(input_element)
+        current_selection = select.first_selected_option.text.strip()
+
+        if current_selection == "Select an option":
+            answer = config.get(question_text)
+
+            if not answer:
+                answer = input(f"Please provide an answer for '{question_text}': ")
+                # answer = generate_answer_for_question(question_text)
+                if answer:
+                    new_answers[question_text] = answer
+                    print(f"AI-generated answer for: {question_text}")
+
+            try:
+                select.select_by_visible_text(answer)
+                print(f"Selected option for: {question_text}")
+            except Exception as e:
+                print(f"Error selecting option for '{question_text}': {e}")
+        else:
+            print(
+                f"Skipping {question_text}, already filled with value: {current_selection}"
+            )
+
+    def handle_text_input(input_element, question_text, config):
+        """Handle text input and textarea fields."""
+        if "resume" in question_text.lower():
+            print(f"Skipping resume-related field: {question_text}")
+            return
+
+        existing_value = input_element.get_attribute("value")
+        if existing_value and existing_value.lower() != "select an option":
+            print(
+                f"Skipping {question_text}, already filled with value: {existing_value}"
+            )
+        else:
+            answer = config.get(question_text)
+
+            if not answer:
+                answer = input(f"Please provide an answer for '{question_text}': ")
+                # answer = generate_answer_for_question(question_text)
+                if answer:
+                    new_answers[question_text] = answer
+                    print(f"AI-generated answer for: {question_text}")
+
+            input_element.send_keys(answer)
+            print(f"Filled answer for: {question_text}")
+
+    def handle_checkbox(input_element, question_text, config):
+        """Handle checkbox inputs."""
+        is_checked = input_element.is_selected()
+        answer = config.get(question_text)
+
+        if not answer:
+            answer = input(f"Please provide an answer for '{question_text}': ")
+            # answer = generate_answer_for_question(question_text)
+            if answer:
+                new_answers[question_text] = answer
+                print(f"AI-generated answer for: {question_text}")
+
+        if answer.lower() == "yes" and not is_checked:
+            input_element.click()
+        elif answer.lower() == "no" and is_checked:
+            input_element.click()
+
     try:
         form = driver.find_element(By.XPATH, "//form")
         labels = form.find_elements(
             By.XPATH, ".//label[not(contains(@class, 'visually-hidden'))]"
         )
-        # Find all label elements in the form
+
+        # Iterate over labels in the form
         for label in labels:
-            question_text = ""
+            question_text = get_label_question_text(label)
+
+            # Skip irrelevant or already filled fields
+            if not question_text or "Search" in question_text:
+                continue
+
+            if "Resume" in question_text:
+                if handle_resume_prefilled():
+                    continue  # Resume is already selected, skip this field
+
             try:
-                # Get the label text (it might be inside a <span>, or not)
+                # Check for fieldset (for radio buttons), but don't assume it's always there
                 try:
-                    span_element = label.find_element(By.XPATH, ".//span")
-                    question_text = (
-                        span_element.text.strip()
-                        if span_element
-                        else label.text.strip()
-                    )
-                except:
-                    question_text = (
-                        label.text.strip()
-                    )  # No <span>, use label's text directly
-
-                if not question_text or "Search" in question_text:
-                    continue  # Skip irrelevant labels
-
-                # Find the input/textarea/select that comes immediately after the label
-                input_element = None
-                try:
+                    fieldset = label.find_element(By.XPATH, "./ancestor::fieldset")
+                    handle_radio_buttons(fieldset, question_text, config)
+                    continue  # Skip further processing if it's a radio button group
+                except NoSuchElementException:
+                    # No fieldset found, treat it as a regular input field
                     input_element = label.find_element(
                         By.XPATH,
-                        "./following-sibling::select | ./following-sibling::input | ./following-sibling::textarea",
+                        "./following-sibling::input | ./following-sibling::select | ./following-sibling::textarea | ./following-sibling::div//input | ./following-sibling::div//select | ./following-sibling::div//textarea",
                     )
-                except:
-                    pass
 
-                if input_element is None:
-                    # If not a direct sibling, look for an input/select/textarea within the same container
-                    try:
-                        input_element = label.find_element(
-                            By.XPATH,
-                            "../following-sibling::input | ../following-sibling::select | ../following-sibling::textarea",
-                        )
-                    except:
-                        pass
+                # Correctly handle based on input type
+                input_type = input_element.get_attribute("type")
 
-                if input_element is None or not input_element.is_displayed():
-                    # Fallback: Try finding an input within the same parent div (sometimes forms are structured this way)
-                    try:
-                        input_element = label.find_element(
-                            By.XPATH,
-                            "following::input | following::select | following::textarea",
-                        )
-                    except:
-                        pass
-
-                if input_element is None or not input_element.is_displayed():
-                    continue  # If no corresponding input or element is not visible, skip this label
-
-                existing_value = input_element.get_attribute("value")
-                if existing_value or existing_value == "Select an option":
-                    print(
-                        f"Skipping {question_text}, already filled with value: {existing_value}"
-                    )
-                    continue
-
-                # Match the question with the config
-                answer = config.get(question_text)
-
-                if not answer:
-                    import pdb
-
-                    pdb.set_trace()
-                    # input("Answer not found generating...")
-                    answer = generate_answer_for_question(question_text)
-                    if answer:
-                        # input_element.send_keys(answer)
-                        print(f"AI-generated answer for: {question_text}")
-                        answer_found = True
-
-                if answer:
-                    # Handle radio buttons (Yes/No)
-                    if input_element.get_attribute("type") == "radio":
-                        yes_radio = form.find_element(
-                            By.XPATH,
-                            f"//input[@type='radio' and @value='Yes'][@name='{input_element.get_attribute('name')}']",
-                        )
-                        no_radio = form.find_element(
-                            By.XPATH,
-                            f"//input[@type='radio' and @value='No'][@name='{input_element.get_attribute('name')}']",
-                        )
-
-                        # Select appropriate radio button based on the answer
-                        if answer.lower() == "yes" and not yes_radio.is_selected():
-                            yes_radio.click()
-                            print(f"Selected 'Yes' for: {question_text}")
-                        elif answer.lower() == "no" and not no_radio.is_selected():
-                            no_radio.click()
-                            print(f"Selected 'No' for: {question_text}")
-                        continue  # Continue after handling radio buttons
-
-                    # Handle <select> dropdowns
-                    if input_element.tag_name == "select":
-                        select = Select(input_element)
-                        try:
-                            select.select_by_visible_text(answer)
-                            print(f"Selected option for: {question_text}")
-                        except:
-                            available_options = [opt.text for opt in select.options]
-                            print(
-                                f"Available options for '{question_text}': {available_options}"
-                            )
-                            # Attempt to select by partial match
-                            for option in select.options:
-                                if answer.lower() in option.text.lower():
-                                    select.select_by_visible_text(option.text)
-                                    print(
-                                        f"Partially matched and selected option for: {question_text}"
-                                    )
-                                    break
-                            else:
-                                print(
-                                    f"Option '{answer}' not found for question '{question_text}'."
-                                )
-
-                    elif (
-                        input_element.tag_name == "input"
-                        and input_element.get_attribute("type") == "checkbox"
-                    ):
-                        # Handle checkboxes
-                        is_checked = input_element.is_selected()
-                        if answer.lower() == "yes" and not is_checked:
-                            input_element.click()
-                        elif answer.lower() == "no" and is_checked:
-                            input_element.click()
-
-                    elif (
-                        input_element.tag_name == "input"
-                        or input_element.tag_name == "textarea"
-                    ):
-                        # Handle text inputs and textareas
-                        if not input_element.get_attribute("value"):
-                            input_element.send_keys(answer)
-                            print(f"Filled answer for: {question_text}")
-                        else:
-                            print(
-                                f"Filled {config[{question_text}]} for: {question_text}"
-                            )
-
-                    else:
-                        print(
-                            f"Unhandled field type: {input_element.tag_name} for question: {question_text}"
-                        )
+                if input_type == "checkbox":
+                    handle_checkbox(input_element, question_text, config)
+                elif input_element.tag_name == "select":
+                    handle_select_dropdown(input_element, question_text, config)
+                elif input_element.tag_name in ["input", "textarea"]:
+                    handle_text_input(input_element, question_text, config)
+                else:
+                    print(f"Unknown field type for {question_text}, skipping.")
 
             except Exception as e:
-                if question_text:
-                    print(f"Error filling field '{question_text}': {e}")
-                else:
-                    print(f"Error while locating a field or label: {e}")
+                print(f"Error handling field '{question_text}': {e}")
 
         print("Application form filled out.")
+
+        # Update config with new answers after each form
+        update_config_with_unanswered_questions(config_path, new_answers)
 
     except Exception as e:
         print(f"Error filling out the application form: {e}")
 
 
-def close_popup_if_present(driver):
-    try:
-        # Wait for the modal pop-up to appear
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located(
-                (By.XPATH, "//div[@class='artdeco-modal__content ember-view']")
+def close_popup_if_present(driver, retries=3):
+    for attempt in range(retries):
+        try:
+            # Locate the close button using its aria-label attribute
+            close_button = WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, "//button[@aria-label='Dismiss']")
+                )
             )
-        )
 
-        # Locate and click the "Not now" button to close the pop-up
-        not_now_button = driver.find_element(
-            By.XPATH, "//button//span[text()='Not now']"
-        )
-        not_now_button.click()
-        print("Closed the pop-up window successfully.")
+            # Scroll the close button into view and click it
+            driver.execute_script("arguments[0].scrollIntoView(true);", close_button)
 
-    except Exception as e:
-        print(f"No pop-up found or error closing the pop-up: {e}")
+            try:
+                close_button.click()
+                print("Popup closed by clicking 'Dismiss'.")
+                return True  # Successfully closed the popup
+            except ElementClickInterceptedException:
+                print("Click intercepted, retrying with JavaScript...")
+                driver.execute_script("arguments[0].click();", close_button)
+                return True  # Successfully closed the popup
+        except StaleElementReferenceException:
+            print(
+                f"StaleElementReferenceException encountered on attempt {attempt+1}, retrying..."
+            )
+            # If the element is stale, the loop will retry finding the element
+        except TimeoutException:
+            print("No popup found or no close button available.")
+            return False  # Exit the loop if the popup isn't found
+        except Exception as e:
+            print(f"Unexpected error while handling the pop-up: {e}")
+            return False
+    print("Failed to close the popup after retries.")
+    return False  # Failed after the maximum retries
 
 
 def handle_follow_checkbox(driver):
     try:
         # Locate the 'Follow' checkbox (it's hidden, so we need to interact with the label)
-        label_element = WebDriverWait(driver, 10).until(
+        label_element = WebDriverWait(driver, 15).until(
             EC.presence_of_element_located(
                 (By.XPATH, "//label[@for='follow-company-checkbox']")
             )
@@ -534,6 +621,7 @@ def click_next_page(driver):
         return False  # No more pages
 
 
+# update yaml with personal information
 def update_yaml_with_env(yaml_file_path):
     """
     Updates the YAML configuration file with values from the environment variables.
@@ -575,3 +663,22 @@ def update_yaml_with_env(yaml_file_path):
         print("YAML configuration updated successfully.")
     except Exception as exc:
         print(f"Failed to write updated data to YAML file: {exc}")
+
+
+def update_config_with_unanswered_questions(config_path, new_answers):
+    try:
+        # Load the existing YAML config file
+        with open(config_path, "r") as file:
+            config_data = yaml.safe_load(file)
+
+        # Update the config data with new answers
+        config_data.update(new_answers)
+
+        # Write the updated config data back to the file
+        with open(config_path, "w") as file:
+            yaml.safe_dump(config_data, file)
+
+        print("Config file successfully updated with new answers.")
+
+    except Exception as e:
+        print(f"Failed to update config file: {e}")
