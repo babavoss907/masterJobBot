@@ -1,31 +1,31 @@
-Samuel Clark's Resume Information:
-
-Name: Samuel Clark
-Title: Software Developer
-Location: Miami, Florida, United States
+Name: [Your Name]
+Title: Software Engineer
+Location: [City, State], United States
 
 Summary:
-Samuel Clark is a highly skilled Software Developer with experience in full-stack development. He has a strong background in building scalable backend systems, working with cloud technologies, and implementing APIs. Samuel is proficient in Python, Flask, AWS, and microservices architecture.
+Experienced Software Engineer with a proven track record in backend development, cloud computing, and API integrations. Adept at creating efficient, scalable systems and collaborating with cross-functional teams. Skilled in technologies such as JavaScript, Node.js, and AWS.
 
 Work Experience:
-1. Software Developer at ZeOmega (October 2021 - October 2023)
-   - Developed microservices for the Jiva health platform using Python and Flask.
-   - Optimized database interactions, enhancing system efficiency by 25%.
-   - Implemented new features and improved performance across various systems.
+1. Backend Engineer at [Company Name] (January 2020 - Present)
 
-2. Teaching Assistant/Software Developer at Code Fellows (July 2021 - October 2021)
-   - Provided mentorship and assistance to students learning software development.
-   - Helped students troubleshoot and improve their code in real-time.
+Designed and implemented RESTful APIs to support mobile and web applications.
+Streamlined database queries, improving system performance by 30%.
+Migrated on-premise systems to AWS, enhancing scalability and reliability.
+2. Software Developer at [Company Name] (June 2018 - December 2019)
 
-3. Full Stack Software Engineer at Online Business Development (October 2017 - July 2021)
-   - Developed high-conversion eCommerce platforms.
-   - Created comprehensive backend solutions for client projects.
+Built and maintained eCommerce platforms, increasing user engagement by 20%.
+Developed and deployed microservices for payment processing.
+Collaborated with frontend developers to ensure seamless user experience.
+3. Junior Developer at [Company Name] (July 2016 - May 2018)
 
+Assisted in developing internal tools to automate business processes.
+Conducted testing and debugging for client-facing web applications.
 Skills:
-- Python, Flask, SQL, Docker
-- AWS services (DynamoDB, Lambda, Amplify)
-- API Design and Microservices Architecture
-- DevOps practices and CI/CD frameworks
 
+JavaScript, Node.js, SQL, MongoDB
+AWS (S3, EC2, RDS)
+API Development and Integration
+Agile Development and CI/CD
 Education:
-- Some college
+
+Bachelor’s Degree in Computer Science or [Relevant Field]

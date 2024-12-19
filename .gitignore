@@ -1,3 +1,6 @@
+#ignore user specific info
+
+
 # Ignore environment variables and credentials
 resources/.env
 
