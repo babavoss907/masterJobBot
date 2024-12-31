@@ -1,6 +1,6 @@
 #ignore user specific info
-reseources/resume_prompt.txt
-resources/config.yaml
+# reseources/resume_prompt.txt
+# resources/config.yaml
 
 # Ignore environment variables and credentials
 resources/.env

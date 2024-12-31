@@ -434,7 +434,7 @@ Do you now or will you in the future require sponsorship?: "No"
 : "Yes"
 Do you require sponsorship?: "No"
 Do you reside in the US?: "Yes"
-Email address: samuelclark907@gmail.com
+Email address: 
 ? "Experience Implementing and maintaining Identity Management (IDM) authentication
   systems and manage Satellite patching processes.
 
@@ -453,9 +453,7 @@ Experience with AWS S3, AWS Lambda and AWS API Gateway.: "3"
 : "Yes"
 Experience with any Streaming applications such as Kafka, Spark Streaming, Azure Event Hub?: "Yes"
 Familiarity with Microsoft Hyper-V virtualization technology is beneficial: "true"
-? "Federal Or State of Texas working Experience?
-
-  Federal Or State of Texas working Experience?"
+Federal Or State of Texas working Experience?"
 : "No"
 Gender: Decline to self identify
 ? "Gender
@@ -486,10 +484,7 @@ Have you led a software engineering teams for 3+ years?: "No"
 Have you mostly worked as Data scientist? (Please note that our customer looks for SWEs, not Data scientists): "false"
 Have you previously worked with Dockers or Kubernetes?: "Yes"
 Have you signed a non-compete with your current employer?: "No"
-? "Have you signed a non-compete with your current employer?
-
-  Have you signed a non-compete with your current employer?"
-: "No"
+Have you signed a non-compete with your current employer?": "No"
 Have you worked in a software development or tech company environment? If so, how long?:
   5
   years
@@ -505,10 +500,7 @@ How Many years of experience you have in Machine Learning?: "2"
 How Many years of experience you have in Python Programming?: "5"
 How Many years of experience you have in Selenium?: "3"
 How did you hear about this job?: I heard about this job through a job search platform
-? "How did you learn about this position?
-
-  How did you learn about this position?"
-: LinkedIn
+How did you learn about this position?": LinkedIn
 How many Years of experience do you have with react: "3"
 How many complex Python/Django projects have you been the main architect of?: "2"
 How many tears of experience do you have with Crowdstrike?: "Yes"
@@ -555,10 +547,7 @@ How many years of experience do you have in FinTech or Blockchain?: "2"
 How many years of experience do you have in Marketing Domain?: "2"
 How many years of experience do you have in YAML?: "5"
 How many years of experience do you have in designing and implementing effective APIs: "5"
-? "How many years of experience do you have in full lifecycle application development
-  using C# and .NET Core (3.x or newer)?
-
-  How many years of experience do you have in full lifecycle application development
+? How many years of experience do you have in full lifecycle application development
   using C# and .NET Core (3.x or newer)?"
 : "Yes"
 How many years of experience do you have with Artiva HCx?: "0"
@@ -682,10 +671,7 @@ How many years of work experience do you have with Interactive Voice Response (I
 How many years of work experience do you have with Java with RAD (Rational Application Developer)?: "1"
 How many years of work experience do you have with Java?: "2"
 How many years of work experience do you have with JavaScript?: "3"
-? "How many years of work experience do you have with Jenkins?
-
-  How many years of work experience do you have with Jenkins?"
-: "2"
+How many years of work experience do you have with Jenkins?": "2"
 How many years of work experience do you have with Jira?: "3"
 How many years of work experience do you have with Joint Test Action Group (JTAG)?: "0"
 How many years of work experience do you have with Large Language Models (LLM)?: "2"
@@ -759,15 +745,15 @@ Is the answer 0.0846684894999683?: "No"
 Is the answer 0.2088836580766596?: "No"
 Is the answer 0.4967869747417249: "Yes"
 Legal Name (if different than above): N/A
-LinkedIn: https://www.linkedin.com/in/samuel-clark-907/
-LinkedIn Profile: https://www.linkedin.com/in/samuel-clark-907/
+LinkedIn: 
+LinkedIn Profile: 
 Location (city): Miami, Florida, United States
 Location Preference: ""
 Middle name: N/A
-Mobile phone number: "2069105322"
+Mobile phone number:
 Must be comfortable working on a W2 basis. C2C candidates, please do not apply.: "Yes"
 Must have 10 years of experience: "No"
-"Num\xE9ro de t\xE9l\xE9phone portable": "2069105322"
+"Num\xE9ro de t\xE9l\xE9phone portable":
 On a scale of 1 - 10, how would you rate your coding knowledge and / or ability with Python (Programming Language)?: "8"
 Only W2 will work, No C2C or 1099. Are you open to work on W2?: "Yes"
 ? Our position is funded by a US National Science Foundation (NSF) grant, which requires
@@ -781,7 +767,7 @@ Phone country code: United States (+1)
 ? Please list at least three people within the last 7 years we may contact with reference
   to your application. One should be from a former manager/supervisor, and two from
   a co-worker, client, vendor, mentor; please do not include relatives.
-: Geoff Craig-907-723-2926
+: 
 ? "Please mention your work authorization status using the following codes: USC: 0
   | GC: 1 | GC_EAD: 2 | H1B: 3 | H4: 4 | TN: 5 | OPT - 6 | Others: 7"
 : "0"
@@ -791,7 +777,7 @@ Please provide your start date timeframe.: ASAP
 Please review and acknowledge Cloudflare's Candidate Privacy Policy (cloudflare.com/candidate-privacy-notice/).: "Yes"
 Please type in a language that you speak: English
 Postal Code: "33101"
-Preferred Name: Sam
+Preferred Name: 
 Proficiency in programming languages, including C#, Python, React, NET, and PowerShell: "5"
 Pronouns: He/Him
 ? Run this function with the argument n=3.14 function runMe(n) { let result = 0.0;
@@ -881,7 +867,7 @@ Which of the following best describes your gender?: Male
 Which of the following best describes your racial or ethnic identity?:
   I prefer not
   to disclose
-Who is your most recent/current employer?: ZeOmega
+Who is your most recent/current employer?: 
 ? Will you now or in the future require First Help Financial to commence ("sponsor")
   an immigration case in order to employ you (for example, H-1B or other employment-based
   immigration case)? This is sometimes called "sponsorship" for an employment-based
@@ -896,7 +882,7 @@ Will you now, or in the future, require sponsorship for employment visa status (
 Willing to come on W2/1099.: "Yes"
 Would you like to include your LinkedIn profile, personal website or blog?: "false"
 Would you like to receive emails, text messages, or phone calls about this job and other matching opportunities?: "No"
-Your Name: Sam Clark
-first name: Sam
+Your Name: 
+first name: 
 have you had experience with Angular 12+?: "Yes"
-last name: Clark
+last name: 
