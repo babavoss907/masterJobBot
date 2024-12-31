@@ -21,6 +21,7 @@ from selenium.common.exceptions import (
     ElementNotInteractableException,
 )
 
+# ai automation not implemented yet
 from ai.ai_bot import generate_cover_letter, generate_answer_for_question
 
 load_dotenv("resources/.env")
@@ -75,6 +76,7 @@ def linkedin_login(driver, LINKEDIN_USERNAME, LINKEDIN_PASSWORD):
 
         username_field.send_keys(LINKEDIN_USERNAME)
         password_field.send_keys(LINKEDIN_PASSWORD)
+
         login_button.click()
         print("Login form submitted!")
 
